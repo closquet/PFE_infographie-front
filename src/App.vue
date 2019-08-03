@@ -1,22 +1,58 @@
 <template>
-  <div id="app" class="app">
-    <div id="nav">
-      <router-link :to="{ name: 'home'}">Home</router-link> |
+    <div id="app" class="app">
+        <TheHeader/>
+        <TheMain/>
+        <TheFooter/>
     </div>
-    <router-view/>
-  </div>
 </template>
 
-<style lang="scss">
-  html {
-    font-family: $labor-text-font-family, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: $color-2;
-    background-color: $color-1;
-  }
+<script>
+    import TheHeader from '@/components/layout/TheHeader';
+    import TheMain from '@/components/layout/TheMain';
+    import TheFooter from '@/components/layout/TheFooter';
 
-  .page-title {
-    font-family: $page-title-font-family;
-  }
+    export default {
+        name: "App",
+        components: {
+            TheHeader,
+            TheMain,
+            TheFooter,
+        }
+    }
+</script>
+
+<style lang="scss">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    html {
+        font-family: $labor-text-font-family, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: $color-2;
+        background-color: $color-1;
+        box-sizing: border-box;
+    }
+
+    .app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .visually-hidden{
+        position: absolute !important;
+        clip: rect(1px 1px 1px 1px) !important;
+        line-height: 1px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 1px !important;
+        overflow: hidden !important;
+        font-size: 1px !important;
+        color: transparent !important;
+    }
+
+
 </style>

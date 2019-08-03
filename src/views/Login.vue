@@ -1,12 +1,12 @@
 <template>
     <div :class="`site-view site-view--${$route.name}`">
-        content home
+        content login
     </div>
 </template>
 
 <script>
     export default {
-        name: 'home',
+        name: 'login',
         components: {},
     }
 </script>

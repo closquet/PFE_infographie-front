@@ -10,7 +10,26 @@ export default new Router({
     {
       path: '/',
       name: 'home',
+      meta: {
+        displayedName: 'Accueil',
+      },
       component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Home.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      meta: {
+        displayedName: 'Mon compte',
+      },
+      component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Account.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      meta: {
+        displayedName: 'Se connecter',
+      },
+      component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Login.vue')
     },
   ]
 });
