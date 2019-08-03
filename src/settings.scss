@@ -50,22 +50,51 @@
   font-style: normal;
 }
 
-$page-title-font: 'Courgette';
-$labor-text-font: 'Roboto';
-
-$color1: #e922ff;
-
-body * {
-  font-family: $labor-text-font, Helvetica, Arial, sans-serif;
-  font-style: italic;
+//Amaranth-Bold
+@font-face {
+  font-family: 'Amaranth';
+  src: url('/assets/fonts/Amaranth/Amaranth-Bold.eot');
+  src: url('/assets/fonts/Amaranth/Amaranth-Bold.eot?#iefix') format('embedded-opentype'),
+  url('/assets/fonts/Amaranth/Amaranth-Bold.woff2') format('woff2'),
+  url('/assets/fonts/Amaranth/Amaranth-Bold.woff') format('woff'),
+  url('/assets/fonts/Amaranth/Amaranth-Bold.ttf') format('truetype'),
+  url('/assets/fonts/Amaranth/Amaranth-Bold.svg#Amaranth-Bold') format('svg');
   font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: $color1;
+  font-style: normal;
 }
 
-h1 {
-  font-family: $page-title-font;
-}
+$root-font-size: 10px; //1rem <html> base font-size
+$font-size-1: 3.84rem; // page-title
+$font-size-2: 2.93rem;
+$font-size-3: 2.419rem;
+$font-size-4: 2.016rem; //page-intro-1
+$font-size-5: 1.68rem; //field content, button 1 & 2
+$font-size-6: 1.4rem; //labor text, page-intro-2, link
+
+$page-title-font-family: 'Courgette';
+$page-intro-font-family: 'Roboto';
+$section-title-font-family: 'Amaranth';
+$labor-text-font-family: 'Roboto';
+
+$vertical-space-size-1: 1rem; //10
+$vertical-space-size-2: 2rem; //20
+$vertical-space-size-3: 4rem; //40
+
+$grid-gap: 15px;
+
+
+$color-1: #F9F7F3; //body background color
+$color-2: #3C3B35; //labor text
+$color-3: #E1875B;
+$color-4: #E19571;
+$color-5: #FAECE6;
+$color-6: #CAB99F;
+$color-7: #AD573C;
+$color-8: #708D3C;
+$color-9: #B8B647;
+$color-10: #F6F6D3;
+
+
+
+
 
