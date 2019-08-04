@@ -27,9 +27,17 @@ export default new Router({
       path: '/login',
       name: 'login',
       meta: {
-        displayedName: 'Se connecter',
+        displayedName: 'Connexion',
       },
       component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Login.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      meta: {
+        displayedName: 'Inscription',
+      },
+      component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Register.vue')
     },
   ]
 });

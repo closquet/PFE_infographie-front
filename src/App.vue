@@ -25,14 +25,20 @@
     * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
+
+    ul{
+        list-style: none;
+    }
+
     html {
         font-family: $labor-text-font-family, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        font-size: $root-font-size;
         color: $color-2;
         background-color: $color-1;
-        box-sizing: border-box;
     }
 
     .app {
@@ -40,6 +46,7 @@
         flex-direction: column;
         min-height: 100vh;
         margin: 0;
+        font-size: $font-size-6;
     }
 
     .visually-hidden{
@@ -54,5 +61,7 @@
         color: transparent !important;
     }
 
-
+    p {
+        margin-top: 0.3em;
+    }
 </style>

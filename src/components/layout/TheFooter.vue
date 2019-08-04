@@ -12,8 +12,11 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .site-footer {
-
+        padding: 20px;
+        text-align: center;
+        color: $color-7;
+        background-color: $color-6;
     }
 </style>

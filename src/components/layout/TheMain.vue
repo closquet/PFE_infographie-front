@@ -14,5 +14,6 @@
 <style scoped>
     .site-main {
         flex-grow: 1;
+        padding: 20px;
     }
 </style>

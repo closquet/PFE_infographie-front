@@ -1,13 +1,13 @@
 <template>
     <div :class="`site-view site-view--${$route.name}`">
-        login
+        register
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'login',
+        name: 'register',
         components: {
         },
     }
