@@ -17,6 +17,7 @@
         padding: 20px;
         text-align: center;
         color: $color-7;
+        border-top: 2px solid $color-7;
         background-color: $color-6;
     }
 </style>

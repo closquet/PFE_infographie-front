@@ -21,10 +21,10 @@
                 <path d="m379.27847,7.71213c0.28957,0.09467 -6.73965,7.66655 -33.61609,4.47839c-26.87644,-3.18817 -35.55959,-3.58668 -63.26299,2.39113c-27.70341,5.9778 -37.21354,-6.77485 -69.87874,-6.77485c-32.66521,0 -25.81887,8.56819 -59.95513,7.17337c-34.13626,-1.39483 -40.00383,-11.39954 -69.87873,-5.97781c-29.8749,5.42172 -30.55399,7.94721 -50.85849,5.82951c-20.3045,-2.11771 -39.28094,-9.4162 -39.69443,-3.83691"/>
             </svg>
         </template>
-        <div :class="`site-header_content site-header_content--${$route.name}`"
+        <div :class="`site-header__content site-header__content--${$route.name}`"
              v-if="headerContentPart1 || headerContentPart2">
-            <span v-if="headerContentPart1" class="site-header_content site-header_content--part-1" v-html="headerContentPart1"></span>
-            <span v-if="headerContentPart2" class="site-header_content site-header_content--part-2" v-html="headerContentPart2"></span>
+            <span v-if="headerContentPart1" class="site-header__content site-header__content--part-1" v-html="headerContentPart1"></span>
+            <span v-if="headerContentPart2" class="site-header__content site-header__content--part-2" v-html="headerContentPart2"></span>
         </div>
         <AuthNav v-if="showAuthNav"/>
     </header>
@@ -144,13 +144,15 @@
         padding: 20px 25px;
     }
 
-    .site-header_content--part-1 {
+    .site-header__content--part-1 {
         font-size: $font-size-4;
         display: block;
+        font-style: italic;
     }
 
-    .site-header_content--part-2 {
+    .site-header__content--part-2 {
         display: block;
         margin-top: 0.3em;
+        font-style: italic;
     }
 </style>
