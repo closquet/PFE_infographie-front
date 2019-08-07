@@ -19,19 +19,22 @@
                             :required="true"
                             :v="$v.form.password"
                             v-model="form.password"/>
+
+            <BigBtn text="Se connecter"/>
         </form>
     </div>
 </template>
 
 <script>
     import InputTextField from "@/components/fields/InputTextField";
+    import BigBtn from "@/components/fields/BigBtn";
     import { required, minLength, email } from 'vuelidate/lib/validators';
-
 
     export default {
         name: 'login',
         components: {
-            InputTextField
+            InputTextField,
+            BigBtn,
         },
         data: () => ({
             form: {
