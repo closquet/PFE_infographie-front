@@ -173,7 +173,7 @@
         border: 2px solid $color-9;
         border-radius: 3px;
         transition: 0.3s;
-        &:focus {
+        &:focus, &:hover {
             border-color: $color-8;
             outline: none;
             background-color: $color-10;
