@@ -5,5 +5,8 @@ module.exports = {
                 data: `@import "~@/settings.scss";`
             },
         }
-    }
+    },
+    devServer: {
+        port: 80,
+    },
 }

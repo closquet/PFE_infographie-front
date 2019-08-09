@@ -74,4 +74,10 @@
         cursor: pointer;
         outline: inherit;
     }
+
+    .g-recaptcha > div{
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: $vertical-space-size-4;
+    }
 </style>

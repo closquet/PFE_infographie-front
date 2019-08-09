@@ -1,5 +1,5 @@
 <template>
-    <div class="field-component" :class="{required: required, invalid: v.$error}" :data-size="dataSize">
+    <div class="field-component" :class="{required: required, invalid: v && v.$error}" :data-size="dataSize">
         <label class="field-component__label" :for="id" v-html="printedLabel"></label>
         <div class="field-component__input-container">
             <input :value="value"
@@ -45,7 +45,7 @@
                 </svg>
             </div>
         </div>
-        <template v-if="v.$error">
+        <template v-if="v && v.$error">
             <span class="field-component__field-alert" v-html="'Champs ' + label + ' erroné' + '&nbsp;:'"></span>
             <ul>
                 <li v-if="typeof v.$params.required === 'object' && !v.required" class="field-component__field-alert">*&nbsp;requis</li>
@@ -84,7 +84,6 @@
             placeholderOnFocus: String,
             v: {
                 type: Object,
-                default: () => ({}),
             },
         },
         data:() => ({
@@ -108,11 +107,11 @@
         methods: {
             updateValue(event) {
                 this.$emit('input', event.target.value);
-                this.v.$reset();
+                this.v && this.v.$reset();
             },
             onBlur() {
                 this.focused = false;
-                this.v.$touch();
+                this.v && this.v.$touch();
                 this.$emit('blur');
             },
             onKeyup(event) {
