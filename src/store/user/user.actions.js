@@ -1,13 +1,23 @@
 import router from '@/router';
+import axios from 'axios';
 
 export default {
-    login({ commit }, { email, psw }) {
-        return new Promise( (resolve, reject) => {
-            console.log(this);
-            resolve();
-            reject();
+    async login({ commit }, { email, password }) {
+        let successResponse = null;
+        commit('set_user_isLoading_to_true');
+        await axios({
+            method: 'post',
+            url:'api/login',
+            data:{email, password},
+        }).then( res => {
+            commit('set_user_data', res.data);
+            commit('set_user_isLogged_to_true');
+            successResponse = res;
+        }).catch( err => {
+            throw err.response;
         });
-
+        commit('set_user_isLoading_to_false');
+        return successResponse;
     },
 
     logout({ commit }, {route}) {

@@ -7,12 +7,12 @@ export default {
         state.data = {};
     },
 
-    set_isLogged_to_false(state) {
-        state.isLogged = false;
+    set_user_isLogged_to_true(state) {
+        state.isLogged = true;
     },
 
-    set_isLogged_to_true(state) {
-        state.isLogged = true;
+    set_user_isLogged_to_false(state) {
+        state.isLogged = false;
     },
 
     set_user_isLoading_to_true(state) {
