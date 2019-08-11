@@ -7,6 +7,33 @@
 </template>
 
 <script>
+    import CryptoJS from 'crypto-js';
+    import SecureStorage from 'secure-web-storage';
+
+    let SECRET_KEY = 'zert4g65se4drg54sdf56g4s56fdg';
+
+    let secureStorage = new SecureStorage(localStorage, {
+        hash: function hash(key) {
+            key = CryptoJS.SHA256(key, SECRET_KEY);
+
+            return key.toString();
+        },
+        encrypt: function encrypt(data) {
+            data = CryptoJS.AES.encrypt(data, SECRET_KEY);
+
+            data = data.toString();
+
+            return data;
+        },
+        decrypt: function decrypt(data) {
+            data = CryptoJS.AES.decrypt(data, SECRET_KEY);
+
+            data = data.toString(CryptoJS.enc.Utf8);
+
+            return data;
+        }
+    });
+
     import TheHeader from '@/components/layout/TheHeader';
     import TheMain from '@/components/layout/TheMain';
     import TheFooter from '@/components/layout/TheFooter';
@@ -17,7 +44,26 @@
             TheHeader,
             TheMain,
             TheFooter,
-        }
+        },
+        methods: {
+            loginFromLocalStorage() {
+                if (secureStorage.getItem('aleafood_uc')) {
+                    const data = secureStorage.getItem('aleafood_uc');
+                    if (data.email && data.password)
+                        this.$store.dispatch('login', {
+                            email: data.email,
+                            password: data.password,
+                        }).then( () => {
+                            //
+                        }).catch( () => {
+                            throw 'Impossible de de se reconnecter'
+                        })
+                }
+            },
+        },
+        created() {
+            this.loginFromLocalStorage();
+        },
     }
 </script>
 

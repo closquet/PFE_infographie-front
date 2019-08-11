@@ -16,10 +16,10 @@ export default {
     },
 
     set_user_isLoading_to_true(state) {
-        state.isLoaded = true;
+        state.isLoading = true;
     },
 
     set_user_isLoading_to_false(state) {
-        state.isLoaded = false;
+        state.isLoading = false;
     },
 };
