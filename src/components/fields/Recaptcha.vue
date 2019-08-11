@@ -8,10 +8,6 @@
 </template>
 
 <script>
-    /**
-     * base: https://github.com/finpo/vue2-recaptcha-invisible
-     *global window document
-     */
     if (typeof window !== 'undefined') {
         window.recaptchaLoaded = new Promise((resolve) => {
             window.vueRecaptchaInit = resolve
@@ -56,7 +52,6 @@
                             options.size = 'checkbox';
                             options.callback = this.getToken
                         }
-                        // console.log('this', this)
                         const recaptchaDiv = document.createElement('div');
                         recaptchaDiv.className = 'g-recaptcha';
                         this.$el.insertBefore(recaptchaDiv, this.$el.childNodes[0]);
