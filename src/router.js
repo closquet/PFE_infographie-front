@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-export default new Router({
+const router =  new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -39,5 +39,11 @@ export default new Router({
       },
       component: () => import(/* webpackChunkName: "home-lazy-loading" */ '@/views/Register.vue')
     },
+    {
+      path: '/*',
+      redirect: '/'
+    },
   ]
 });
+
+export default router;
