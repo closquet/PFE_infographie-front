@@ -37,10 +37,6 @@
         }
     }
 
-    form .small-btn {
-        margin-top: $vertical-space-size-4;
-    }
-
     .small-btn__icon {
         background-color: $color-3;
         display: flex;
