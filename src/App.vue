@@ -45,20 +45,28 @@
             TheMain,
             TheFooter,
         },
+        data: () => ({
+            responseErrors: [],
+        }),
         methods: {
-            loginFromLocalStorage() {
-                if (secureStorage.getItem('aleafood_uc')) {
-                    const data = secureStorage.getItem('aleafood_uc');
-                    if (data.email && data.password)
-                        this.$store.dispatch('login', {
-                            email: data.email,
-                            password: data.password,
-                        }).then( () => {
-                            //
-                        }).catch( () => {
-                            throw 'Impossible de de se reconnecter'
-                        })
-                }
+            async loginFromLocalStorage() {
+                this.$store.dispatch('loginFromToken').catch( err => {
+                    if (err && err.data) {
+                        if (err.data.errors) {
+                            Object.values(err.data.errors).forEach( item => {
+                                this.responseErrors = [...this.responseErrors, item[0]]
+                            })
+                        }else if (err.data.error){
+                            this.responseErrors = [err.data.error]
+                        }
+                    }else if (err && err.message){
+                        this.responseErrors = ['Problème rencontré'];
+                        throw err.message;
+                    }else {
+                        this.responseErrors = ['Problème rencontré'];
+                        throw 'loginFromLocalStorage: Problème rencontré';
+                    }
+                });
             },
         },
         created() {

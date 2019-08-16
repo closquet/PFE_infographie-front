@@ -12,7 +12,6 @@
                             id="register-name"
                             type="text"
                             name="name"
-                            :required="true"
                             :v="$v.form.name"
                             v-model="form.name"/>
 
@@ -20,7 +19,6 @@
                             id="register-email"
                             type="email"
                             name="email"
-                            :required="true"
                             :v="$v.form.email"
                             v-model="form.email"/>
 
@@ -28,14 +26,12 @@
                             id="register-password"
                             type="password"
                             name="password"
-                            :required="true"
                             :v="$v.form.password1"
                             v-model="form.password1"/>
 
             <Field label="Confirmation mot de passe"
                             id="register-password2"
                             type="password"
-                            :required="true"
                             :v="$v.form.password2"
                             v-model="form.password2"/>
 
@@ -135,9 +131,12 @@
 
         },
         beforeRouteEnter(to, from, next) {
-            if (!from.name && to.name === 'register' && router.app.$store.state.user.isLoading) {
-                router.app.$watch(`$store.state.user.isLogged`, function (newVal) {
-                    ( newVal && router.push({name: 'home'}) ) || next();
+            if (router.app.$store.state.user.isLogged) next( vm => vm.$router.push({name: 'home'}));
+            else if (!from.name && to.name === 'register' && router.app.$store.state.user.isLoading) {
+                router.app.$watch(`$store.state.user.isLoading`, function () {
+                    if(router.app.$store.state.user.isLogged) {
+                        next( vm => vm.$router.push({name: 'home'}));
+                    } else next();
                 });
             } else next();
         },

@@ -82,20 +82,31 @@
                 }).then( () => {
                     this.$router.prevRoute.name ? this.$router.push({name: this.$router.prevRoute.name}) : this.$router.push({name: 'home'});
                 }).catch( err => {
-                    if (err.data.errors) {
-                        Object.values(err.data.errors).forEach( item => {
-                            this.responseErrors = [...this.responseErrors, item[0]]
-                        })
-                    }else if (err.data.error){
-                        this.responseErrors = [err.data.error]
+                    if (err && err.data) {
+                        if (err.data.errors) {
+                            Object.values(err.data.errors).forEach( item => {
+                                this.responseErrors = [...this.responseErrors, item[0]]
+                            })
+                        }else if (err.data.error){
+                            this.responseErrors = [err.data.error]
+                        }
+                    }else if (err && err.message){
+                        this.responseErrors = ['Problème rencontré'];
+                        throw err.message;
+                    }else {
+                        this.responseErrors = ['Problème rencontré'];
+                        throw 'Problème rencontré';
                     }
                 })
             },
         },
         beforeRouteEnter(to, from, next) { // if auto connect on app load, go home
-            if (!from.name && to.name === 'login' && router.app.$store.state.user.isLoading) {
-                router.app.$watch(`$store.state.user.isLogged`, function (newVal) {
-                    ( newVal && router.push({name: 'home'}) ) || next();
+            if (router.app.$store.state.user.isLogged) next( vm => vm.$router.push({name: 'home'}));
+            else if (!from.name && to.name === 'login' && router.app.$store.state.user.isLoading) {
+                router.app.$watch(`$store.state.user.isLoading`, function () {
+                    if(router.app.$store.state.user.isLogged) {
+                        next( vm => vm.$router.push({name: 'home'}));
+                    } else next();
                 });
             } else next();
         },
