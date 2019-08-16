@@ -77,6 +77,7 @@
                        @focus="onFocus"
                        @blur="onBlur"
                        @keyup="onKeyup"
+                       :disabled="disabled"
                        :required="required">
                 <div v-if="type === 'password'"
                      :title="(showPassword ? 'Masquer' : 'Afficher') + ' le mot de passe'"
@@ -113,17 +114,20 @@
         <template v-else-if="['select'].includes(type)">
             <label :class="`field-component__label field-component__label--${type}`"
                    :for="id" v-html="printedLabel"></label>
-            <v-select
-                    :placeholder="placeholderOnFocusBlur"
-                    :options="options"
-                    label="text"
-                    :reduce="item => item.value"
-                    :value="value"
-                    :id="id"
-                    @input="updateValue"
-                    @blur="onBlur"
-                    :required="required"
-            ></v-select>
+            <div :class="['field-component__field', `field-component__field--${type}`, {inputClass: inputClass}]">
+                <v-select
+                        :placeholder="placeholderOnFocusBlur"
+                        :options="options"
+                        :multiple="multiple"
+                        label="text"
+                        :reduce="item => item.value"
+                        :value="value"
+                        :id="id"
+                        @input="updateValue"
+                        @blur="onBlur"
+                        :required="required"
+                ></v-select>
+            </div>
         </template>
 
         <template v-if="v && v.$error">
@@ -166,12 +170,14 @@
             inputClass: String,
             placeholder: String,
             type: String,
-            value: [Number, String, Boolean],
+            value: [Number, String, Boolean, Array],
             placeholderOnFocus: String,
             v: Object,
             cols: [Number, String],
             rows: [Number, String],
             options: Array,
+            disabled: Boolean,
+            multiple: Boolean,
         },
         data:() => ({
             focused: false,
@@ -227,7 +233,7 @@
 
 <style scoped lang="scss">
     .field-component {
-        margin-bottom: $vertical-space-size-2;
+        margin-top: $vertical-space-size-2;
     }
 
     .field-component__fieldset {
@@ -265,15 +271,6 @@
         }
     }
 
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill:hover,
-    textarea:-webkit-autofill:focus,
-    select:-webkit-autofill:hover,
-    select:-webkit-autofill:focus {
-
-    }
-
     .field-component__field:not(.field-component__field--checkbox) {
         display: block;
         width: 100%;
@@ -292,6 +289,17 @@
         }
     }
 
+    .field-component__field[disabled] {
+        background-color: $color-12;
+        border-color: $color-12;
+
+        &:focus, &:hover {
+            border-color: $color-12;
+            background-color: $color-12;
+            outline: none;
+        }
+    }
+
     .field-component__field--textarea {
         resize: none;
         padding-top: 15px;
@@ -300,6 +308,7 @@
     .field-component__label--checkbox {
         display: inline-block;
         cursor: pointer;
+        margin-bottom: 0;
     }
 
     .field-component--checkbox {
@@ -314,6 +323,7 @@
     .field-component__field--checkbox {
         margin-right: 5px;
         cursor: pointer;
+        display: block;
     }
 
     .invalid .field-component__field {
@@ -351,6 +361,12 @@
         margin-top: 0.3em;
     }
 
+    .field-component .field-component__field--select {
+        /*padding: 0;*/
+        display: flex;
+        align-items: center;
+    }
+
 </style>
 
 <style lang="scss">
@@ -359,5 +375,38 @@
         cursor: help;
         transform: scale(1.3);
         display: inline-block;
+    }
+
+    .field-component--select {
+        input[type="search"]::-webkit-search-cancel-button {
+            display: none;
+        }
+
+
+        .v-select.vs--searchable {
+            width: 100%;
+        }
+
+        .vs__dropdown-toggle {
+            /*min-height: 5rem;*/
+            border: none;
+        }
+
+        .vs__search, .vs__search:focus {
+            padding: 0;
+            color: $color-2;
+        }
+
+        .vs__actions {
+            padding-right: 0;
+        }
+
+        .vs__selected { // cells in field
+            display: none;
+        }
+
+        .vs__clear {
+            display: none;
+        }
     }
 </style>
