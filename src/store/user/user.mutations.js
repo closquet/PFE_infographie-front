@@ -1,6 +1,12 @@
 export default {
     set_user_data(state, payload) {
+        const tokens = state.data.tokens;
         state.data = payload;
+        tokens && ( state.data.tokens = tokens );
+    },
+
+    refresh_user_tokens(state, payload) {
+        state.data.tokens = payload;
     },
 
     unset_user_data(state) {
