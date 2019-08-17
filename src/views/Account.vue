@@ -77,7 +77,7 @@
     import router from "@/router";
     import Field from "@/components/fields/Field";
     import BigBtn from "@/components/BigBtn";
-    import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
+    import { required, minLength, sameAs } from 'vuelidate/lib/validators';
     import Loading from 'vue-loading-overlay';
     import { mapState } from 'vuex';
     import SmallLabelList from "@/components/SmallLabelList";
@@ -209,6 +209,12 @@
                         return !this.form.editPassword || !!value
                     },
                     minLength: minLength(8),
+                },
+                repeatPassword: {
+                    required: function (value) {
+                        return !this.form.editPassword || !!value
+                    },
+                    sameAs: sameAs('newPassword'),
                 },
             }
         }
