@@ -1,44 +1,44 @@
 <template>
     <div class="section-title-component">
         <i class="section-title-component__decoration"></i>
-        <span v-if="!level" class="section-title-component__text">
-            {{title}}
-        </span>
+        <span v-if="!level"
+              v-html="title"
+              class="section-title-component__text"></span>
         <h1 v-if="level === '1'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h1>
         <h2 v-else-if="level === '2'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h2>
         <h3 v-else-if="level === '3'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h3>
         <h4 v-else-if="level === '4'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h4>
         <h5 v-else-if="level === '5'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h5>
         <h6 v-else-if="level === '6'"
             :id="id"
             :aria-level="level"
+            v-html="title"
             class="section-title-component__text">
-            {{title}}
         </h6>
     </div>
 </template>
@@ -56,9 +56,11 @@
 
 <style scoped lang="scss">
     .section-title-component {
+        margin-left: auto;
+        margin-right: auto;
         width: max-content;
         position: relative;
-        margin-bottom: $vertical-space-size-1;
+        margin-bottom: $vertical-space-size-2;
     }
 
     .section-title-component__text {
@@ -72,10 +74,10 @@
     .section-title-component__decoration {
         background-color: rgba($color-8, 20%);
         display: block;
-        width: 100%;
+        width: calc(100% + 20px);
         height: 1.45rem;
         position: absolute;
         bottom: -0.2em;
-        right: -1.4em;
+        right: -10px;
     }
 </style>

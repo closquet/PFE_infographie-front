@@ -1,41 +1,41 @@
 import axios from 'axios';
 
 export default {
-    async getAllAllergens({ commit }) {
+    async getAllTags({ commit }) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await axios({
             method: 'get',
-            url:'api/allergens',
+            url:'api/tags',
         }).then( res => {
-            commit('set_all_allergens_data', res.data);
+            commit('set_all_tags_data', res.data);
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 
 
-    async getAmountAllergens({ commit }) {
+    async getAmountTags({ commit }) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await axios({
             method: 'get',
-            url:'api/allergens/count',
+            url:'api/tags/count',
         }).then( res => {
-            commit('set_allergens_amount', res.data);
+            commit('set_tags_amount', res.data);
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 
 
-    async deleteAllergen({ commit, dispatch, rootState }, slug) {
+    async deleteTag({ commit, dispatch, rootState }, slug) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await dispatch('handleTokenValidity', {
             expires_on: rootState.user.data.tokens.expires_on,
             rememberMe: rootState.user.data.tokens.rememberMe,
@@ -43,39 +43,39 @@ export default {
         });
         await axios({
             method: 'delete',
-            url:`api/admin/allergens/${slug}`,
+            url:`api/admin/tags/${slug}`,
             headers: {
                 Authorization: `Bearer ${rootState.user.data.tokens.access_token}`
             },
         }).then( res => {
-            commit('delete_allergen', slug);
+            commit('delete_tag', slug);
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 
 
-    async getSingleAllergen({ commit }, slug) {
+    async getSingleTag({ commit }, slug) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await axios({
             method: 'get',
-            url:`api/allergens/${slug}`,
+            url:`api/tags/${slug}`,
         }).then( res => {
-            commit('set_single_allergen', res.data);
+            commit('set_single_tag', res.data);
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 
 
-    async updateAllergen({ commit, dispatch, rootState }, { slug, name }) {
+    async updateTag({ commit, dispatch, rootState }, {slug, name}) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await dispatch('handleTokenValidity', {
             expires_on: rootState.user.data.tokens.expires_on,
             rememberMe: rootState.user.data.tokens.rememberMe,
@@ -83,24 +83,24 @@ export default {
         });
         await axios({
             method: 'put',
-            url:`api/admin/allergens/${slug}`,
+            url:`api/admin/tags/${slug}`,
             data:{name},
             headers: {
                 Authorization: `Bearer ${rootState.user.data.tokens.access_token}`
             },
         }).then( res => {
-            commit('set_single_allergen', res.data);
+            commit('set_single_tag', res.data);
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 
 
-    async createAllergen({ commit, dispatch, rootState }, { name }) {
+    async createTag({ commit, dispatch, rootState }, { name }) {
         let successResponse = null;
-        commit('set_allergens_isLoading_to_true');
+        commit('set_tags_isLoading_to_true');
         await dispatch('handleTokenValidity', {
             expires_on: rootState.user.data.tokens.expires_on,
             rememberMe: rootState.user.data.tokens.rememberMe,
@@ -108,7 +108,7 @@ export default {
         });
         await axios({
             method: 'post',
-            url:`api/admin/allergens`,
+            url:`api/admin/tags`,
             data:{name},
             headers: {
                 Authorization: `Bearer ${rootState.user.data.tokens.access_token}`
@@ -117,7 +117,7 @@ export default {
             successResponse = res;
         }).catch( err => {
             throw err.response;
-        }).finally( () => commit('set_allergens_isLoading_to_false'));
+        }).finally( () => commit('set_tags_isLoading_to_false'));
         return successResponse;
     },
 };

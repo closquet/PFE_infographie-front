@@ -30,9 +30,13 @@
 
         &:hover, &:focus {
             .small-btn__text {
-                width: 100%;
-                padding-right: 2rem;
-                padding-left: 3.3rem;
+                left: -3rem;
+                width: calc(100% + 1px);
+                padding: 5px 1.5rem 5px 3.5rem;
+            }
+
+            .small-btn__icon > * {
+                transform: rotate(180deg);
             }
         }
     }
@@ -41,9 +45,8 @@
         background-color: $color-3;
         display: flex;
         align-items: center;
-        /*justify-content: center;*/
         height: 3rem;
-        min-width: 3.4rem;
+        width: 3rem;
         border-radius: 1.5rem;
         position: relative;
         z-index: 2;
@@ -53,6 +56,8 @@
         & > * {
             display: block;
             width: 1.4rem;
+            stroke: $color-1;
+            transition: 0.5s;
         }
     }
 
@@ -60,15 +65,15 @@
         display: flex;
         align-items: center;
         background-color: $color-3;
-        padding: 5px 0;
-        transition: 0.3s;
+        padding: 5px 0 5px 0;
         overflow: hidden;
-        width: 3rem;
         height: 3rem;
+        width: 0;
         border-radius: 1.5rem;
         position: relative;
+        left: -100%;
         z-index: 1;
-        margin-left: -3.4rem;
+        transition: 0.5s;
 
         & > * {
             display: block;

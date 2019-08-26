@@ -4,6 +4,10 @@
                  :can-cancel="false"
                  :is-full-page="true"></loading>
 
+        <h2 class="visually-hidden">
+            Formulaire de connexion
+        </h2>
+
         <form @submit.prevent="tryToSubmit"
               novalidate
               class="form form--login">
@@ -29,7 +33,7 @@
 
             <BigBtn text="Se connecter"/>
         </form>
-        <ul v-if="responseErrors">
+        <ul class="response-errors" v-if="responseErrors.length">
             <li class="response-errors__error" v-for="(error, index) in responseErrors" :key="index">
                 {{error}}
             </li>
@@ -124,11 +128,3 @@
         }
     }
 </script>
-
-<style scoped lang="scss">
-    .response-errors__error {
-        display: block;
-        color: $color-7;
-        margin-top: 0.3em;
-    }
-</style>

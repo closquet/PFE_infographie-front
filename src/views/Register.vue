@@ -4,11 +4,16 @@
                  :can-cancel="false"
                  :is-full-page="true"></loading>
 
+        <h2 class="visually-hidden">
+            Formulaire de création de compte
+        </h2>
+
         <form @submit.prevent="tryToSubmit"
               novalidate
               class="form form--register">
 
-            <Field label="Votre nom (Visible par les autre utilisateurs)"
+            <Field label="Votre nom"
+                            labelInfo=" (Visible par les autre utilisateurs)"
                             id="register-name"
                             type="text"
                             name="name"
@@ -45,7 +50,7 @@
 
             <BigBtn text="Créer mon compte"/>
         </form>
-        <ul v-if="responseErrors">
+        <ul class="response-errors" v-if="responseErrors.length">
             <li class="response-errors__error" v-for="(error, index) in responseErrors" :key="index">
                 {{error}}
             </li>
@@ -61,6 +66,7 @@
     import router from "@/router";
     import { mapState } from 'vuex';
     import Loading from 'vue-loading-overlay';
+    import { personName } from '@/functions';
 
     export default {
         name: 'register',
@@ -145,7 +151,7 @@
                 name: {
                     required,
                     minLength: minLength(2),
-                    alphaAndSpaceAndHyphen: value => /^([a-zA-Z]+([\s-][a-zA-Z]+)*)+$/.test(value),
+                    personName,
                 },
                 email: {
                     required,
@@ -166,11 +172,3 @@
         }
     }
 </script>
-
-<style scoped lang="scss">
-    .response-errors__error {
-        display: block;
-        color: $color-7;
-        margin-top: 0.3em;
-    }
-</style>

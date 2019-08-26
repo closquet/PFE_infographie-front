@@ -134,4 +134,44 @@
         margin-right: auto;
         margin-top: $vertical-space-size-4;
     }
+
+    .link1 {
+        color: $color-3;
+        text-decoration: none;
+        padding: 2px 0;
+        border-bottom: 2px solid transparent;
+        transition: 0.3s;
+
+        &:focus, &:hover {
+            border-bottom: 2px solid $color-3;
+            outline: none;
+        }
+    }
+
+    .response-errors {
+        display: block;
+        color: $color-7;
+        padding: 10px;
+        background-color: $color-13;
+        margin-top: $vertical-space-size-2;
+        border-radius: 3px;
+    }
+
+    .response-errors__error + .response-errors__error {
+        margin-top: 0.5rem;
+    }
+
+    .response-success {
+        display: block;
+        padding: 10px;
+        background-color: $color-14;
+        margin-top: $vertical-space-size-2;
+        color: $color-8;
+        border-radius: 3px;
+    }
+
+    .response-success--top {
+        margin-top: 0;
+        margin-bottom: 2rem;
+    }
 </style>

@@ -1,29 +1,29 @@
 export default {
-    set_all_allergens_data(state, payload) {
+    set_all_tags_data(state, payload) {
         state.all = payload;
     },
 
-    set_allergens_amount(state, payload) {
+    set_tags_amount(state, payload) {
         state.amount = payload;
     },
 
-    set_allergens_isLoading_to_true(state) {
+    set_tags_isLoading_to_true(state) {
         state.isLoading = true;
     },
 
-    set_allergens_isLoading_to_false(state) {
+    set_tags_isLoading_to_false(state) {
         state.isLoading = false;
     },
 
-    delete_allergen(state, slug) {
+    delete_tag(state, slug) {
         state.all = state.all.filter( item => item.slug !== slug);
     },
 
-    set_single_allergen(state, payload) {
+    set_single_tag(state, payload) {
         state.single = payload;
     },
 
-    unset_single_allergen(state) {
+    unset_single_tag(state) {
         state.single = {};
     },
 };

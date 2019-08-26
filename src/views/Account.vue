@@ -6,6 +6,7 @@
 
         <form @submit.prevent="tryToSubmit"
               novalidate
+              v-if="user.isLogged"
               class="form form--account">
 
             <Field label="Email"
@@ -16,22 +17,41 @@
                    :disabled="true"
                    v-model="user.data.email"/>
 
-            <Field label="Votre nom (Visible par les autre utilisateurs)"
+            <Field label="Votre nom"
+                   labelInfo=" (Visible par les autre utilisateurs)"
                    id="account-name"
                    type="text"
                    name="name"
                    :v="$v.form.name"
                    v-model="form.name"/>
 
+            <Field label="Présentation"
+                   id="account-description"
+                   type="textarea"
+                   rows="5"
+                   v-model="form.description"/>
+
             <template v-if="!allergens.isLoading">
                 <Field label="Mes allergies"
                        id="account-allergens"
                        type="select"
-                       :multiple="true"
+                       :hideSelected="true"
+                       :multiplex="true"
                        :options="allergensOptions"
-                       :v="$v.form.allergens"
-                       v-model="form.allergens"/>
-                <SmallLabelList :items="smallLabelListItems"/>
+                       @input="addAllergen"/>
+                <SmallLabelList @click="removeAllergen"
+                                :items="allergensSmallLabelList"/>
+            </template>
+
+            <template v-if="!ingredients.isLoading">
+                <Field label="Ce que je n'aime pas"
+                       id="account-disliked-ingredients"
+                       type="select"
+                       :hideSelected="true"
+                       :options="ingredientsOptions"
+                       @input="addDislikedIngredient"/>
+                <SmallLabelList @click="removeIngredient"
+                                :items="ingredientsSmallLabelList"/>
             </template>
 
             <Field type="checkbox"
@@ -62,7 +82,7 @@
 
             <BigBtn text="Enregistrer"/>
         </form>
-        <ul v-if="responseErrors">
+        <ul v-if="responseErrors.length" class="response-errors">
             <li class="response-errors__error" v-for="(error, index) in responseErrors" :key="index">
                 {{error}}
             </li>
@@ -81,6 +101,7 @@
     import Loading from 'vue-loading-overlay';
     import { mapState } from 'vuex';
     import SmallLabelList from "@/components/SmallLabelList";
+    import { personName } from '@/functions';
 
     export default {
         name: 'account',
@@ -95,7 +116,7 @@
                 name: '',
                 description: '',
                 allergens: [],
-                disliked_ingredients: [],
+                dislikedIngredients: [],
                 editPassword: false,
                 oldPassword: '',
                 newPassword: '',
@@ -108,17 +129,29 @@
             ...mapState([
                 'user',
                 'allergens',
+                'ingredients',
             ]),
             allergensOptions() {
-                return this.allergens.allAllergens.map( item => {
+                return this.allergens.all.map( item => {
                     return {
                         text: item.name,
                         value: item.id,
                     };
                 });
             },
-            smallLabelListItems() {
-                return this.allergens.allAllergens.length ?  this.allergens.allAllergens.filter( item => this.form.allergens.includes(item.id)) : [];
+            ingredientsOptions() {
+                return this.ingredients.all.map( item => {
+                    return {
+                        text: item.name,
+                        value: item.id,
+                    };
+                });
+            },
+            allergensSmallLabelList() {
+                return this.allergens.all.length ?  this.allergens.all.filter( item => this.form.allergens.includes(item.id)) : [];
+            },
+            ingredientsSmallLabelList() {
+                return this.ingredients.all.length ?  this.ingredients.all.filter( item => this.form.dislikedIngredients.includes(item.id)) : [];
             },
         },
         methods: {
@@ -134,26 +167,28 @@
                 this.responseErrors = [];
                 this.responseSuccess = false;
                 if (!this.$v.$invalid)
-                    this.updateUser();
+                    this.submit();
             },
-            updateUser() {
+            submit() {
                 this.$store.dispatch('updateUserProfile', {
                     name: this.form.name,
                     description: this.form.description,
                     allergens: this.form.allergens,
-                    disliked_ingredients: this.form.disliked_ingredients,
+                    disliked_ingredients: this.form.dislikedIngredients,
                     oldPassword: this.form.oldPassword,
                     newPassword: this.form.newPassword,
                     editPassword: this.form.editPassword,
                 }).then( () => {
-                    this.responseSuccess = true;
                     this.form.allergens = this.user.data.allergens.map( item => item.id);
+                    setTimeout( () => {
+                        this.responseSuccess = true;
+                    }, 200)
                 }).catch( err => {
                     if (err && err.data) {
                         if (err.data.errors) {
                             Object.values(err.data.errors).forEach( item => {
-                                this.responseErrors = [...this.responseErrors, item[0]]
-                            })
+                                this.responseErrors = [...this.responseErrors, item[0]];
+                            });
                         }else if (err.data.error){
                             this.responseErrors = [err.data.error]
                         }
@@ -166,6 +201,20 @@
                     }
                 });
             },
+            removeAllergen(id) {
+                this.form.allergens = this.form.allergens.filter( item => item !== id);
+            },
+            removeIngredient(id) {
+                this.form.dislikedIngredients = this.form.dislikedIngredients.filter( item => item !== id);
+            },
+            addAllergen(value) {
+                if (!this.form.allergens.includes(value))
+                    this.form.allergens = [...this.form.allergens, value];
+            },
+            addDislikedIngredient(value) {
+                if (!this.form.dislikedIngredients.includes(value))
+                    this.form.dislikedIngredients = [...this.form.dislikedIngredients, value];
+            }
         },
         beforeRouteEnter(to, from, next) {
             if (router.app.$store.state.user.isLogged) next();
@@ -179,43 +228,49 @@
 
         },
         created(){
-            !this.allergens.allAllergens.length && this.$store.dispatch('getAllAllergens');
-        },
-        mounted() {
+            this.$store.dispatch('getAllAllergens');
+            this.$store.dispatch('getAllIngredients');
             if (this.user.isLogged) {
                 this.form.name = this.user.data.name;
                 this.form.description = this.user.data.description;
                 this.form.allergens = this.user.data.allergens.map( item => item.id);
-                this.form.disliked_ingredients = this.user.data.disliked_ingredients;
+                this.form.dislikedIngredients = this.user.data.disliked_ingredients.map( item => item.id);
             }
             this.setWatcher();
-
         },
-        validations: {
-            form: {
+        validations() {
+            let defaultValidations = {
                 name: {
                     required,
                     minLength: minLength(2),
-                    alphaAndSpaceAndHyphen: value => /^([a-zA-Z]+([\s-][a-zA-Z]+)*)+$/.test(value),
+                    personName,
                 },
-                oldPassword: {
-                    required: function (value) {
-                        return !this.form.editPassword || !!value
-                    },
-                    minLength: minLength(8),
-                },
-                newPassword: {
-                    required: function (value) {
-                        return !this.form.editPassword || !!value
-                    },
-                    minLength: minLength(8),
-                },
-                repeatPassword: {
-                    required: function (value) {
-                        return !this.form.editPassword || !!value
-                    },
-                    sameAs: sameAs('newPassword'),
-                },
+            };
+
+            if (this.form.editPassword) {
+                return {
+                    form: {
+                        ...defaultValidations,
+                        oldPassword: {
+                            required,
+                            minLength: minLength(8),
+                        },
+                        newPassword: {
+                            required,
+                            minLength: minLength(8),
+                        },
+                        repeatPassword: {
+                            required,
+                            sameAs: sameAs('newPassword'),
+                        },
+                    }
+                };
+            }else {
+                return {
+                    form: {
+                        ...defaultValidations,
+                    }
+                };
             }
         }
     }

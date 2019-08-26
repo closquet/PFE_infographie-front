@@ -1,6 +1,6 @@
-import mutations from './allergens.mutations';
-import actions from './allergens.actions';
-import getters from './allergens.getters';
+import mutations from './ingredientSubCats.mutations';
+import actions from './ingredientSubCats.actions';
+import getters from './ingredientSubCats.getters';
 
 export default {
     state: {

@@ -5,6 +5,7 @@ import getters from './user.getters';
 export default {
     state: {
         data : {},
+        amount : null,
         isLogged: false,
         isLoading: false,
     },

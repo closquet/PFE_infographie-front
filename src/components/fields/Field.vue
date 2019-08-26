@@ -52,7 +52,7 @@
                           :value="value"
                           :id="id"
                           :class="`field-component__field field-component__field--${type}`"
-                          :placeholder="placeholderAfterRequireCheck"
+                          :placeholder="placeholderOnFocusBlur"
                           @input="updateValue"
                           @keyup="onKeyup"
                           @focus="onFocus"
@@ -112,17 +112,26 @@
         </template>
 
         <template v-else-if="['select'].includes(type)">
-            <label :class="`field-component__label field-component__label--${type}`"
+            <label :class="[
+                        `field-component__label field-component__label--${type}`,
+                        {'visually-hidden': hideLabel},
+                    ]"
                    :for="id" v-html="printedLabel"></label>
-            <div :class="['field-component__field', `field-component__field--${type}`, {inputClass: inputClass}]">
+            <div :class="[
+                            'field-component__field', `field-component__field--${type}`,
+                            {inputClass: inputClass},
+                            {'hide-selected': hideSelected},
+                        ]">
                 <v-select
                         :placeholder="placeholderOnFocusBlur"
                         :options="options"
                         :multiple="multiple"
+                        :searchable="searchable"
                         label="text"
                         :reduce="item => item.value"
                         :value="value"
                         :id="id"
+                        :components="{components}"
                         @input="updateValue"
                         @blur="onBlur"
                         :required="required"
@@ -131,15 +140,16 @@
         </template>
 
         <template v-if="v && v.$error">
-            <span class="field-component__field-alert" v-html="'Champs ' + label + ' erroné' + ':'"></span>
+            <span class="field-component__field-alert" v-html="`Champs «${label}» erroné&nbsp;:`"></span>
             <ul>
                 <li v-if="typeof v.$params.required === 'object' && !v.required" class="field-component__field-alert">*&nbsp;requis.</li>
                 <li v-if="typeof v.$params.sameAs === 'object' && !v.sameAs" class="field-component__field-alert">Mots de passe différents.</li>
                 <li v-if="typeof v.$params.alpha === 'object' && !v.alpha" class="field-component__field-alert">Caractères alphabétiques uniquement.</li>
-                <li v-if="typeof v.$params.alphaAndSpaceAndHyphen === 'object' && !v.alphaAndSpaceAndHyphen" class="field-component__field-alert">
+                <li v-if="typeof v.$params.personName === 'object' && !v.personName" class="field-component__field-alert">
                     Caractères autorisés&nbsp;: Alphabétiques, un trait d'union ou un espace entre les éléments.
                 </li>
                 <li v-if="typeof v.$params.numeric === 'object' && !v.numeric" class="field-component__field-alert">Caractères numériques uniquement.</li>
+                <li v-if="typeof v.$params.integer === 'object' && !v.integer" class="field-component__field-alert">Nombres entiers uniquement.</li>
                 <li v-if="typeof v.$params.email === 'object' && !v.email" class="field-component__field-alert">
                     Veuillez entrer une adresse email valide.
                 </li>
@@ -148,6 +158,9 @@
                 </li>
                 <li v-if="typeof v.$params.maxLength === 'object' && !v.maxLength" class="field-component__field-alert">
                     Maximum {{v.$params.maxLength.max}} caractères.
+                </li>
+                <li v-if="typeof v.$params.maxValue === 'object' && !v.maxValue" class="field-component__field-alert">
+                    Maximum {{v.$params.maxValue.max}}.
                 </li>
                 <li v-if="typeof v.$params.minValue === 'object' && !v.minValue" class="field-component__field-alert">
                     La valeur doit être supérieur à {{v.$params.minValue.min - 1}}.
@@ -165,6 +178,10 @@
         name: "Field",
         props: {
             label: String,
+            labelInfo: {
+                type: String,
+                default: ''
+            },
             name: String,
             id: String,
             inputClass: String,
@@ -178,6 +195,13 @@
             options: Array,
             disabled: Boolean,
             multiple: Boolean,
+            hideLabel: Boolean,
+            hideSelected: Boolean,
+            searchable: {
+                type: Boolean,
+                default: true
+            },
+            components: Object
         },
         data:() => ({
             focused: false,
@@ -186,9 +210,9 @@
         computed: {
             printedLabel() {
                 if (this.required)
-                    return this.label + '&nbsp;<span class="field-component__required-label-info" title="Champs requis">*</span>';
+                    return this.label +  this.labelInfo + '&nbsp;<span class="field-component__required-label-info" title="Champs requis">*</span>';
                 else 
-                    return this.label;
+                    return this.label +  this.labelInfo;
             },
             placeholderOnFocusBlur() {
                 if (this.placeholderOnFocus) {
@@ -234,6 +258,7 @@
 <style scoped lang="scss">
     .field-component {
         margin-top: $vertical-space-size-2;
+        transition: 0.3s;
     }
 
     .field-component__fieldset {
@@ -249,6 +274,7 @@
     .field-component__label {
         display: block;
         margin-bottom: 0.3em;
+        color: $color-2;
     }
 
     /* Change Autocomplete styles in Chrome*/
@@ -282,12 +308,18 @@
         border: 2px solid $color-9;
         border-radius: 3px;
         transition: 0.3s;
+
+        &.field-component__field--textarea {
+            padding: 15px;
+        }
+
         &:focus, &:hover {
             border-color: $color-8;
             outline: none;
             background-color: $color-10;
         }
     }
+
 
     .field-component__field[disabled] {
         background-color: $color-12;
@@ -362,9 +394,11 @@
     }
 
     .field-component .field-component__field--select {
-        /*padding: 0;*/
+        padding: 0;
         display: flex;
         align-items: center;
+        border: none;
+        min-height: auto;
     }
 
 </style>
@@ -378,35 +412,87 @@
     }
 
     .field-component--select {
+        input {
+            padding: 0 15px;
+            width: 100%;
+            border: 2px solid $color-9;
+            transition: 0.3s;
+            border-radius: 3px;
+
+            &:focus, &:hover {
+                border: 2px solid $color-8;
+                background-color: $color-10;
+            }
+
+            &:focus {
+                border-radius: 3px 3px 0 0;
+            }
+        }
+
         input[type="search"]::-webkit-search-cancel-button {
             display: none;
         }
 
 
-        .v-select.vs--searchable {
+        .v-select {
             width: 100%;
         }
 
         .vs__dropdown-toggle {
-            /*min-height: 5rem;*/
             border: none;
+            padding: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        .vs__search, .vs__search:focus {
-            padding: 0;
+        .vs__search {
+            padding: 0 15px;
+            min-height: 4.6rem;
+            margin: 0;
             color: $color-2;
+
         }
 
         .vs__actions {
             padding-right: 0;
+            position: absolute;
+            right: 10px;
         }
 
-        .vs__selected { // cells in field
+        .vs--open {
+            .vs__actions, .vs__dropdown-toggle {
+
+            }
+        }
+
+        .vs__selected-options {
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .vs__selected {
+            position: absolute;
+            padding: 0 15px;
+            margin: 0;
+
+        }
+
+        .hide-selected .vs__selected { // cells in field
             display: none;
         }
 
         .vs__clear {
             display: none;
+        }
+
+        .vs__dropdown-menu {
+            max-height: 150px;
+            padding: 0;
+            border: 2px solid $color-8;
+            border-top: none;
+            background-color: $color-10;
         }
     }
 </style>

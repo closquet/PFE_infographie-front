@@ -1,11 +1,11 @@
 <template>
     <ul class="small-label-list-component">
-        <li v-for="(item, index) in items"
+        <li v-for="(item) in items"
             class="small-label-list-component__item"
-            :key="index">
+            :key="item.id">
             <button  class="small-label-list-component__btn"
                      :title="`Supprimer ${item.name} de mes allergies`"
-                     @click="$emit('click', item.id)">
+                     @click.prevent="$emit('click', item.id)">
                 <span class="visually-hidden">Supprimer </span><span class="small-label-list-component__text">{{item.name}}</span><span class="visually-hidden"> de mes allergies</span>
                 <span class="small-label-list-component__cross-container">
                     <svg class="small-label-list-component__cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5.426 5.426">
@@ -36,10 +36,6 @@
         display: block;
     }
 
-    .small-label-list-component {
-        margin-top: $vertical-space-size-1;
-    }
-
     .small-label-list-component__btn {
         display: flex;
         justify-content: center;
@@ -66,7 +62,7 @@
         display: inline-block;
         position: relative;
         margin-right: $vertical-space-size-1;
-        margin-bottom: $vertical-space-size-1;
+        margin-top: $vertical-space-size-1;
     }
 
     .small-label-list-component__text {
