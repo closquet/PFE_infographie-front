@@ -73,7 +73,7 @@ export default {
     },
 
 
-    async updateRecipe({ commit, dispatch, rootState }, {slug, name, preparation_time, cooking_time, ingredients, tags, steps, description}) {
+    async updateRecipe({ commit, dispatch, rootState }, {slug, name, preparation_time, cooking_time, persons, ingredients, tags, steps, description}) {
         let successResponse = null;
         commit('set_recipes_isLoading_to_true');
         await dispatch('handleTokenValidity', {
@@ -84,7 +84,7 @@ export default {
         await axios({
             method: 'put',
             url:`api/admin/recipes/${slug}`,
-            data:{name, preparation_time, cooking_time, ingredients, tags, steps, description},
+            data:{name, preparation_time, cooking_time, persons, ingredients, tags, steps, description},
             headers: {
                 Authorization: `Bearer ${rootState.user.data.tokens.access_token}`
             },
@@ -98,7 +98,7 @@ export default {
     },
 
 
-    async createRecipe({ commit, dispatch, rootState }, { name, preparation_time, cooking_time, ingredients, tags, steps, description }) {
+    async createRecipe({ commit, dispatch, rootState }, { name, preparation_time, cooking_time, persons, ingredients, tags, steps, description }) {
         let successResponse = null;
         commit('set_recipes_isLoading_to_true');
         await dispatch('handleTokenValidity', {
@@ -109,7 +109,7 @@ export default {
         await axios({
             method: 'post',
             url:`api/admin/recipes`,
-            data:{name, preparation_time, cooking_time, ingredients, tags, steps, description},
+            data:{name, preparation_time, cooking_time, persons, ingredients, tags, steps, description},
             headers: {
                 Authorization: `Bearer ${rootState.user.data.tokens.access_token}`
             },

@@ -5,7 +5,7 @@
                  :is-full-page="true"></loading>
         <section :aria-labelledby="`${$route.meta.resource}-section-title`">
             <span v-if="!$route.params.slug && responseSuccess" class="response-success response-success--top">
-                Resource créée.
+                Resource<span v-if="previousResourceName"> "{{previousResourceName}}"</span> créée.
             </span>
             <SectionTitle :title="subViewTitle"
                           class="site-sub-view__title"
@@ -115,12 +115,20 @@
                        :v="$v.form.cooking_time"
                        v-model="form.cooking_time"/>
 
+                <Field v-if="['recipe'].includes(this.$route.meta.resource)"
+                       label="Nombre de personnes"
+                       id="resource-persons"
+                       type="text"
+                       :v="$v.form.persons"
+                       v-model="form.persons"/>
+
                 <template v-if="['recipe'].includes(this.$route.meta.resource) && !tags.isLoading">
                     <Field label="Tags"
                            id="resource-tags"
                            type="select"
                            :hideSelected="true"
                            :multiplex="true"
+                           :key="'tags' + tagsFieldKey"
                            :options="tagsOptions"
                            @input="addTag"/>
                     <SmallLabelList @click="removeTag"
@@ -221,6 +229,7 @@
                            type="select"
                            :hideSelected="true"
                            :multiplex="true"
+                           :key="'allergens' + allergensFieldKey"
                            :options="allergensOptions"
                            @input="addAllergen"/>
                     <SmallLabelList @click="removeAllergen"
@@ -232,6 +241,7 @@
                            id="resource-disliked-ingredients"
                            type="select"
                            :hideSelected="true"
+                           :key="'dislikedIngredients' + dislikedIngredientsFieldKey"
                            :options="ingredientsOptions"
                            @input="addDislikedIngredient"/>
                     <SmallLabelList @click="removeIngredient"
@@ -250,6 +260,7 @@
                        type="select"
                        :hideSelected="true"
                        :multiplex="true"
+                       :key="'seasons' + seasonsFieldKey"
                        :options="seasonsOptions"
                        @input="addSeason"/>
                 <SmallLabelList @click="removeSeason"
@@ -315,11 +326,17 @@
                 password: '',
                 preparation_time: '',
                 cooking_time: '',
+                persons: '',
                 seasons: [],
                 sub_cat_id: '',
                 is_admin: 0,
                 selectedFile: null,
             },
+            previousResourceName: '',
+            allergensFieldKey: 0,
+            dislikedIngredientsFieldKey: 0,
+            seasonsFieldKey: 0,
+            tagsFieldKey: 0,
             responseErrors: [],
             avatarResponseErrors: [],
             avatarResponseSuccess: false,
@@ -464,6 +481,12 @@
                     this.create();
                 }
             },
+            refreshMultiSelectField() {
+                this.allergensFieldKey++;
+                this.dislikedIngredientsFieldKey++;
+                this.seasonsFieldKey++;
+                this.tagsFieldKey++;
+            },
             create() {
                 this.$store.dispatch(`create${upFirstLetter(this.$route.meta.resource)}`, this.form).then( (res) => {
                     if (this.form.selectedFile) {
@@ -472,7 +495,9 @@
                             this.avatar = null;
                             this.form.selectedFile = null;
                             this.$refs.resourceAvatarInput.value = '';
+                            this.refreshMultiSelectField();
                             this.$store.commit(`unset_single_${this.$route.meta.resource}`);
+                            this.previousResourceName = this.form.name;
                             this.form = {
                                 allergens: [],
                                 ingredients: [],
@@ -486,6 +511,7 @@
                                 password: '',
                                 preparation_time: '',
                                 cooking_time: '',
+                                persons: '',
                                 seasons: [],
                                 sub_cat_id: '',
                                 is_admin: 0,
@@ -501,7 +527,9 @@
                             this.catchAction(err);
                         });
                     }else {
+                        this.refreshMultiSelectField();
                         window.scrollTo(0,0);
+                        this.previousResourceName = this.form.name;
                         this.form = {
                             allergens: [],
                             ingredients: [],
@@ -515,6 +543,7 @@
                             password: '',
                             preparation_time: '',
                             cooking_time: '',
+                            persons: '',
                             seasons: [],
                             sub_cat_id: '',
                             is_admin: 0,
@@ -720,6 +749,7 @@
                     const is_admin = this.$store.state[this.$route.meta.resource + 's'].single.is_admin;
                     const preparation_time = this.$store.state[this.$route.meta.resource + 's'].single.preparation_time;
                     const cooking_time = this.$store.state[this.$route.meta.resource + 's'].single.cooking_time;
+                    const persons = this.$store.state[this.$route.meta.resource + 's'].single.persons;
                     const seasons = this.$store.state[this.$route.meta.resource + 's'].single.seasons;
                     const sub_cat_id = this.$store.state[this.$route.meta.resource + 's'].single.sub_cat_id;
 
@@ -736,6 +766,7 @@
                     is_admin && (this.form.is_admin = is_admin);
                     preparation_time && (this.form.preparation_time = preparation_time);
                     cooking_time && (this.form.cooking_time = cooking_time);
+                    persons && (this.form.persons = persons);
                     seasons && seasons.length && (this.form.seasons = seasons.map( item => item.id));
                     sub_cat_id && (this.form.sub_cat_id = sub_cat_id);
 
@@ -796,6 +827,11 @@
                             required,
                             integer,
                             maxValue: maxValue(1440)
+                        },
+                        persons: {
+                            required,
+                            integer,
+                            maxValue: maxValue(100)
                         },
                         description: {},
                         ingredients: {
